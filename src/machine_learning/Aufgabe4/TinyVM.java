@@ -4,15 +4,15 @@ import java.util.Scanner;
 public class TinyVM {
 
 	
-	private static final int CMD_MASK = 0x000F;    // 0000000000001111 CMD_MASK                                                                                    
-	private static final int  IDX0_MASK = 0x00F0;    // 0000000011110000 IDX0_MASK [R0..R15]                                                                                   
-	private static final int IDX1_MASK = 0x0F00;    // 0000111100000000 IDX1_MASK [R0..R15]  
-	private static final int IDX2_MASK = 0xF000;    // 1111000000000000 IDX2_MASK [R0..R15]
-	private static final int NUMBER_MASK = 0xFFF0; // 1111111111110000 JMP_MASK  
+	public static final int CMD_MASK = 0x000F;    // 0000000000001111 CMD_MASK                                                                                    
+	public static final int  IDX0_MASK = 0x00F0;    // 0000000011110000 IDX0_MASK [R0..R15]                                                                                   
+	public static final int IDX1_MASK = 0x0F00;    // 0000111100000000 IDX1_MASK [R0..R15]  
+	public static final int IDX2_MASK = 0xF000;    // 1111000000000000 IDX2_MASK [R0..R15]
+	public static final int NUMBER_MASK = 0xFFF0; // 1111111111110000 JMP_MASK  
 
-	private static final int SUBROUTINE_SIZE = 64;
-	private static final int PROG_LENGTH = 1024;
-	private static final int STACKSIZE = 10000;
+	public static final int SUBROUTINE_SIZE = 64;
+	public static final int PROG_LENGTH = 1024;
+	public static final int STACKSIZE = 10000;
 	
 	
 	public static String[] COMMAND = {"LOAD    ","MOVE    ","MUL     ","DIV     ","SUB     ","ADD     ","EQU     ","RET     ","JIH     ","JSR     ","SQRT    ","IS_PRIME","MOD     ","PUSH     ","POP     ","NOP     "};  
@@ -40,9 +40,9 @@ public class TinyVM {
 	public static boolean debug;
     public static int[] memory = new int[PROG_LENGTH];                                                                              
     public static int programCounter;                                                                            
-    public static long[] reg = new long[32];                                                                                   
+    public static double[] reg = new double[32];                                                                                   
     public static int[] stack = new int[STACKSIZE];    
-	public static long[] regStack = new long[STACKSIZE];
+	public static double[] regStack = new double[STACKSIZE];
 	public static int regStackPtr;
     public static int stackptr;                                                                                  
     public static boolean endOfProg;      
@@ -50,10 +50,10 @@ public class TinyVM {
     public static int cmd; // command                                                                            
     public static int idx0,idx1,idx2; // number of register [R0..R15]                                                 
     public static int number; // adress to jump into   
-	public static long primeA,primeB;
+	public static double primeA,primeB;
 	public static int cycle;
 	public static double sqrtHelp;
-	public static long R0,R1;
+	public static double R0,R1;
 	public static double fitness;
 	public static int opcode;	
 	
@@ -63,6 +63,10 @@ public class TinyVM {
 	public TinyVM(int fitness, boolean debug){
 		fitness = 0;
 		debug = false;
+	}
+	
+	public TinyVM(){
+		
 	}
 	
 	/**********************************************************************
@@ -105,12 +109,17 @@ public class TinyVM {
 					  // scanf("%d\n",&var); ????
 				   }
 			   }			
-				
-				switch(Commands.values()[cmd]){   
+			   if(idx0 > reg.length -1){
+				System.out.println("idx0: " + idx0);
+			   }
+			   if(idx1 > reg.length -1){
+					System.out.println("idx1" + idx1);
+				   }
+				switch(Commands.values()[cmd]){ 
 					case LOAD: {R0 = reg[0]    = number;                     programCounter++;  break;}  
 					case MOVE: {R0 = reg[idx0] = reg[idx1];                  programCounter++;  break;}                        
 					case MUL:  {R0 = reg[idx0] = reg[idx1] * reg[idx2];      programCounter++; break;}                        
-					case DIV:  {if (reg[idx2]>0) R0 = reg[idx0] = reg[idx1] / reg[idx2];      programCounter++; break;}                        
+					case DIV:  {if (reg[idx2]>0) R0 = reg[idx0] = reg[idx1] / reg[idx2]; programCounter++; break;}                        
 					case SUB:  {R0 = reg[idx0] = reg[idx1] - reg[idx2];      programCounter++; break;}                        
 					case ADD:  {R0 = reg[idx0] = reg[idx1] + reg[idx2];      programCounter++; break;}                        
 					case EQU:  {R0 = reg[idx0] = (reg[idx1] == reg[idx2])? 1 : 0;     programCounter++; break;}                        
@@ -154,10 +163,5 @@ public class TinyVM {
 			}while(endOfProg==false && cycle<10000);  
 			return 0; // prime not found
 	    }                                                                                                                
-	
-	public static void main(String[] args) {
-		simulate();
-	}
 
 }
-
