@@ -1,6 +1,6 @@
 # Machine-Learning
 
-##Dieses Repository beinhaltet:
+####Dieses Repository beinhaltet:
 
 * Den **Hill-Climber Alogrithmus** auf Basis des Problems des Handlungsreisenden. Dieser Algorithmus  wurde im Folgeschritt zu einem Simulated Annealing 'erweitert'.
 
