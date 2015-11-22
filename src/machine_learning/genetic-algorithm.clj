@@ -1,4 +1,4 @@
-(ns machine-learning.core
+(ns genetic-algorithm.core
   (:require [clojure.core.matrix :as mat]))
 
 ;; Aufgabe 3 Genetischer Algorithmus ohne Gray
