@@ -1,4 +1,4 @@
-(ns machine-learning.core
+(ns hill-climber.core
   (:require [clojure.core.matrix :as mat]))
 
 ;;Alle Informationen auf https://clojuredocs.org/
