@@ -36,11 +36,12 @@ public class MainFrame extends JFrame {
 		//run();
 	}
 
-    public double runAction(int xBall, int yBall, int xSchlaeger) {
+    public double runAction(int xBall, int yBall, int xSchlaeger, int xV, int yV) {
             return (2.0*Math.random()-1.0);
         }
 
-    public void learn(boolean reward) {
+    public void learn(int reward, int xBall, int yBall, int xSchlaeger, int xV, int yV) {
+
     }
 
 	public void run() {
@@ -48,12 +49,15 @@ public class MainFrame extends JFrame {
 		int xBall=5, yBall=6, xSchlaeger=5, xV=1, yV=1;
 		int score=0;
 
+                int counter = 0;
+                final int pretraining_steps = 100000;
+
 		while (!stop) {
 			inputOutput.fillRect(0,0,imageWidth, imageHeight, Color.black);
 			inputOutput.fillRect(xBall*30, yBall*30, 30, 30, Color.green);
 			inputOutput.fillRect(xSchlaeger*30, 11*30+20, 90, 10, Color.orange);
 
-			double action=runAction(xBall, yBall, xSchlaeger);//(2.0*Math.random()-1.0);
+			double action=runAction(xBall, yBall, xSchlaeger, xV, yV);//(2.0*Math.random()-1.0);
 			if (action<-0.3){
 				xSchlaeger--;
 			}
@@ -77,25 +81,32 @@ public class MainFrame extends JFrame {
 			}
 
 			if (yBall==11){
+                            counter++;
 				if (xSchlaeger==xBall || xSchlaeger==xBall-1 || xSchlaeger==xBall-2){
-                                    learn(true);
+                                    learn(1, xBall, yBall, xSchlaeger, xV, yV);
 					//positive reward
-					System.out.println("positive reward");
+                                    //	System.out.println("positive reward");
 				}
 				else{
-                                    learn(false);
+                                    learn(-1, xBall, yBall, xSchlaeger, xV, yV);
 					//negative reward
-					System.out.println("negative reward");
+                                    //	System.out.println("negative reward");
 				}
-			}
+			}else{
+                            learn(0, xBall, yBall, xSchlaeger, xV, yV);
+                        }
 
 			try {
-			    Thread.sleep(100);                 //1000 milliseconds is one second.
+                            if(counter > pretraining_steps) {
+                                Thread.sleep(100);                 //1000 milliseconds is one second.
+                            }
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
 
-			repaint();
+                        if(counter > pretraining_steps) {
+                            repaint();
+                        }
 			validate();
 		}
 
